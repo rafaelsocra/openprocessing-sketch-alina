@@ -1,7 +1,7 @@
 let photos = [];
 let index = -1;
-let menuHeight = 80; // valor inicial, será atualizado dinamicamente
 let canvas;
+let menuHeight = 0;
 
 function preload() {
   for (let i = 1; i <= 7; i++) {
@@ -10,13 +10,13 @@ function preload() {
 }
 
 function setup() {
-  // detecta altura do menu automaticamente
-  let menu = document.querySelector('header, .pixpa-header, #header'); // ajuste se necessário
+  // Detecta altura do menu do Pixpa dinamicamente
+  let menu = document.querySelector('header, .pixpa-header, #header'); 
   if (menu) menuHeight = menu.offsetHeight;
 
   canvas = createCanvas(window.innerWidth, window.innerHeight - menuHeight);
-  canvas.position(0, menuHeight);
-  canvas.style('z-index', '-1'); // deixa atrás do menu
+  canvas.position(0, menuHeight); // posiciona abaixo do menu
+  canvas.style('z-index', '-1'); // sempre atrás do menu
   noCursor();
   frameRate(30);
   background('#f2f2f2');
