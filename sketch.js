@@ -1,55 +1,53 @@
-// declare image array + index
 let photos = [];
 let index = -1;
+let menuHeight = 80; // valor inicial, será atualizado dinamicamente
+let canvas;
 
-// setup the sketch
-function setup() {
-  noCursor();
-  createCanvas(1920, 1080);
-  frameRate(30);
-
-  // fundo cor gelo
-  background('#f2f2f2');
-
-  // carregar imagens da pasta images
-  photos[0] = loadImage('images/1.png');
-  photos[1] = loadImage('images/2.png');
-  photos[2] = loadImage('images/3.png');
-  photos[3] = loadImage('images/4.png');
-  photos[4] = loadImage('images/5.png');
-  photos[5] = loadImage('images/6.png');
-  photos[6] = loadImage('images/7.png');
+function preload() {
+  for (let i = 1; i <= 7; i++) {
+    photos.push(loadImage('images/' + i + '.png'));
+  }
 }
 
-// define what happens when a certain key is pressed
+function setup() {
+  // detecta altura do menu automaticamente
+  let menu = document.querySelector('header, .pixpa-header, #header'); // ajuste se necessário
+  if (menu) menuHeight = menu.offsetHeight;
+
+  canvas = createCanvas(window.innerWidth, window.innerHeight - menuHeight);
+  canvas.position(0, menuHeight);
+  canvas.style('z-index', '-1'); // deixa atrás do menu
+  noCursor();
+  frameRate(30);
+  background('#f2f2f2');
+}
+
+function windowResized() {
+  resizeCanvas(window.innerWidth, window.innerHeight - menuHeight);
+  canvas.position(0, menuHeight);
+}
+
 function keyPressed() {
   if (keyCode === 8) { // Delete
     clear();
-    background('#f2f2f2'); // mantém fundo gelo ao limpar
+    background('#f2f2f2');
   }
   if (keyCode === 80) { // P
     saveCanvas('myCanvas', 'png');
   }
 }
 
-// add 1 to the array every time the mouse is pressed
 function mousePressed() {
-  background('#f2f2f2'); // mantém fundo gelo
-  index = index + 1;
-  if (index === photos.length) {
-    index = 0;
-  }
+  background('#f2f2f2');
+  index++;
+  if (index === photos.length) index = 0;
 }
 
 function draw() {
   if (mouseIsPressed) {
     let img = photos[index];
-
-    // manter proporção 3:2 e reduzir para 1/4 do tamanho original
-    let w = 450; // largura
-    let h = w * (2 / 3); // altura proporcional
-
-    // desenhar a imagem centrada no mouse
+    let w = 450;
+    let h = w * (2 / 3); // mantém proporção 3:2
     image(img, mouseX - w / 2, mouseY - h / 2, w, h);
   }
 }
