@@ -1,27 +1,67 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sketch Alina Pixpa</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.js"></script>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden; /* remove scrollbars */
-      background-color: #f2f2f2;
+<meta charset="UTF-8">
+<title>OpenProcessing Sketch Alina</title>
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        overflow: hidden; /* remove scroll */
+        background-color: #f2f2f2; /* cor gelo */
     }
-    #defaultCanvas0 {
-      display: block;
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: -1; /* canvas atrás do menu Pixpa */
+    canvas {
+        display: block;
     }
-  </style>
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.js"></script>
 </head>
 <body>
-  <script src="sketch.js"></script>
+<script>
+let photos = [];
+let index = -1;
+
+function preload() {
+    // carregar imagens da pasta 'images' no mesmo repositório
+    for (let i = 1; i <= 7; i++) {
+        photos.push(loadImage(`images/${i}.png`));
+    }
+}
+
+function setup() {
+    noCursor();
+    createCanvas(windowWidth, windowHeight);
+    frameRate(30);
+    background('#f2f2f2');
+}
+
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+}
+
+function keyPressed() {
+    if (keyCode === 8) { // Delete
+        clear();
+        background('#f2f2f2');
+    }
+    if (keyCode === 80) { // P
+        saveCanvas('myCanvas', 'png');
+    }
+}
+
+function mousePressed() {
+    index = (index + 1) % photos.length;
+    background('#f2f2f2');
+}
+
+function draw() {
+    if (mouseIsPressed) {
+        let img = photos[index];
+        let w = img.width / 4;
+        let h = img.height / 4;
+        image(img, mouseX - w / 2, mouseY - h / 2, w, h);
+    }
+}
+</script>
 </body>
 </html>
