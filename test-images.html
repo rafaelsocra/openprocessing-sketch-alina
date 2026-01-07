@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Teste Carregamento de Imagens</title>
+</head>
+<body>
+<h2>Teste de Carregamento das 11 Imagens</h2>
+<div id="output"></div>
+
+<script>
+const total = 11;
+let loaded = 0;
+const output = document.getElementById("output");
+
+for (let i = 1; i <= total; i++) {
+  const img = new Image();
+  img.src = `images/${i}.png`;
+  
+  img.onload = () => {
+    loaded++;
+    const p = document.createElement("p");
+    p.textContent = `Imagem ${i} carregou (${loaded}/${total})`;
+    output.appendChild(p);
+    console.log(`Imagem ${i} carregou (${loaded}/${total})`);
+  };
+
+  img.onerror = () => {
+    const p = document.createElement("p");
+    p.textContent = `Erro ao carregar images/${i}.png`;
+    p.style.color = "red";
+    output.appendChild(p);
+    console.error(`Erro ao carregar images/${i}.png`);
+  };
+}
+</script>
+</body>
+</html>
