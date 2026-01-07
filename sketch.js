@@ -1,5 +1,5 @@
 let photos = [];
-let index = -1;
+let index = 0;
 let canvas;
 let menuHeight = 0;
 let started = false;
@@ -7,12 +7,7 @@ let started = false;
 function preload() {
   photos = [];
   for (let i = 1; i <= 11; i++) {
-    let img = loadImage(
-      `images/${i}.png`,
-      () => console.log(`Imagem ${i} carregada`),
-      () => console.warn(`Erro ao carregar images/${i}.png`)
-    );
-    photos.push(img);
+    photos.push(loadImage(`images/${i}.png`));
   }
 }
 
@@ -24,12 +19,13 @@ function setup() {
   canvas.position(0, menuHeight);
   canvas.style('z-index', '-1');
 
-  noCursor();
   frameRate(30);
-  background('#f2f2f2');
+  noCursor();
 
   textAlign(CENTER, CENTER);
   textSize(14);
+
+  background('#f2f2f2');
 }
 
 function windowResized() {
@@ -38,22 +34,8 @@ function windowResized() {
   background('#f2f2f2');
 }
 
-function keyPressed() {
-  if (keyCode === 8) { // Delete
-    clear();
-    background('#f2f2f2');
-  }
-  if (keyCode === 80) { // P
-    saveCanvas('myCanvas', 'png');
-  }
-}
-
 function mousePressed() {
-  if (!started) {
-    started = true;
-    background('#f2f2f2');
-  }
-
+  started = true;
   index++;
   if (index >= photos.length) index = 0;
 }
@@ -63,7 +45,7 @@ function draw() {
   if (!started) {
     background('#f2f2f2');
 
-    fill(0, 128); // 50% de opacidade
+    fill(30, 128); // cinza escuro, 50% opacidade
     noStroke();
 
     text(
@@ -75,12 +57,13 @@ function draw() {
   }
 
   // DESENHO DAS IMAGENS
-  if (mouseIsPressed && photos.length > 0) {
+  if (mouseIsPressed) {
     let img = photos[index];
-    if (img) {
-      let w = 450;
-      let h = w * (2 / 3);
-      image(img, mouseX - w / 2, mouseY - h / 2, w, h);
-    }
+    if (!img) return;
+
+    let w = 450;
+    let h = w * (2 / 3);
+    image(img, mouseX - w / 2, mouseY - h / 2, w, h);
   }
 }
+
