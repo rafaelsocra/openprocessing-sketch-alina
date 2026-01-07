@@ -3,16 +3,27 @@ let index = 0;
 let canvas;
 let menuHeight = 0;
 let started = false;
+let imagesLoaded = 0; // conta quantas imagens foram carregadas
 
 function preload() {
-  // Carrega imagens de 1 a 11
+  // Carrega imagens de 1 a 11 com callback para garantir que todas carreguem
   for (let i = 1; i <= 11; i++) {
-    photos.push(loadImage(`images/${i}.png`));
+    loadImage(
+      `images/${i}.png`,
+      (img) => {
+        photos.push(img);
+        imagesLoaded++;
+        console.log(`Imagem ${i} carregada`);
+      },
+      () => {
+        console.warn(`Erro ao carregar images/${i}.png`);
+      }
+    );
   }
 }
 
 function setup() {
-  // Detecta altura do menu
+  // Detecta altura do menu do Pixpa (opcional)
   let menu = document.querySelector('header, .pixpa-header, #header'); 
   if (menu) menuHeight = menu.offsetHeight;
 
@@ -21,12 +32,11 @@ function setup() {
   canvas.style('z-index', '-1');
 
   frameRate(30);
-
-  // Cursor visível
   textAlign(CENTER, CENTER);
   textSize(16);
 
-  background('#f2f2f2');
+  background('#f2f2f2'); // fundo inicial
+  // Cursor visível
 }
 
 function windowResized() {
@@ -36,12 +46,13 @@ function windowResized() {
 }
 
 function mousePressed() {
-  // Primeiro clique inicia a interação e faz o texto sumir
   if (!started) {
+    // Primeiro clique apenas inicia o sketch
     started = true;
+    return; 
   }
 
-  // Avança para próxima imagem
+  // A partir do segundo clique, avança o índice
   index++;
   if (index >= photos.length) index = 0;
 }
@@ -51,7 +62,7 @@ function draw() {
   if (!started) {
     background('#f2f2f2');
 
-    fill(0, 128); // 50% de opacidade
+    fill(0, 128); // 50% opacidade
     noStroke();
     text(
       "Haz clic, arrastra, juega.\nClick, drag, play.\nClique, arraste, jogue.",
@@ -62,8 +73,8 @@ function draw() {
     return; // não desenha imagens ainda
   }
 
-  // DESENHO DAS IMAGENS
-  if (mouseIsPressed && photos.length === 11) {
+  // DESENHO DAS IMAGENS (só se todas as 11 imagens carregaram)
+  if (mouseIsPressed && imagesLoaded === 11) {
     let img = photos[index];
     if (!img) return;
 
