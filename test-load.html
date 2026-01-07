@@ -2,24 +2,13 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Teste de Imagens</title>
+  <title>Teste JS</title>
 </head>
 <body>
+<h2>Teste JS</h2>
 <script>
-const total = 11;
-let loaded = 0;
-
-for (let i = 1; i <= total; i++) {
-  const img = new Image();
-  img.src = `images/${i}.png`;
-  img.onload = () => {
-    loaded++;
-    console.log(`Imagem ${i} carregou (${loaded}/${total})`);
-  };
-  img.onerror = () => {
-    console.error(`Erro ao carregar images/${i}.png`);
-  };
-}
+console.log("O script está rodando!");
+alert("O script está rodando!");
 </script>
 </body>
 </html>
