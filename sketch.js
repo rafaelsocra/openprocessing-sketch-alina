@@ -4,10 +4,10 @@ let canvas;
 let menuHeight = 0;
 let started = false;
 let totalImages = 11;
-let imagesLoaded = 0; // conta imagens carregadas com sucesso
+let imagesLoaded = 0;
 
 function preload() {
-  // Carrega todas as imagens de 1 a 11
+  // Carrega imagens de 1 a 11
   for (let i = 1; i <= totalImages; i++) {
     loadImage(
       `images/${i}.png`,
@@ -24,7 +24,6 @@ function preload() {
 }
 
 function setup() {
-  // Detecta altura do menu do Pixpa, se houver
   let menu = document.querySelector('header, .pixpa-header, #header'); 
   if (menu) menuHeight = menu.offsetHeight;
 
@@ -36,7 +35,7 @@ function setup() {
   textAlign(CENTER, CENTER);
   textSize(16);
 
-  background('#f2f2f2'); // fundo inicial
+  background('#f2f2f2');
   // Cursor visível
 }
 
@@ -48,14 +47,15 @@ function windowResized() {
 
 function mousePressed() {
   if (!started) {
-    // Primeiro clique inicia o sketch e faz desaparecer o texto
     started = true;
     return;
   }
 
-  // A partir do segundo clique, avança para a próxima imagem
-  index++;
-  if (index >= photos.length) index = 0;
+  // Avança índice apenas se houver imagens carregadas
+  if (photos.length > 0) {
+    index++;
+    if (index >= photos.length) index = 0;
+  }
 }
 
 function draw() {
@@ -63,7 +63,7 @@ function draw() {
 
   // TEXTO INICIAL
   if (!started) {
-    fill(0, 128); // 50% de opacidade
+    fill(0, 128); // 50% opacidade
     noStroke();
     text(
       "Haz clic, arrastra, juega.\nClick, drag, play.\nClique, arraste, jogue.",
@@ -71,21 +71,19 @@ function draw() {
       height / 2
     );
 
-    // Opcional: mostrar quantas imagens carregaram até agora
+    // Mostra quantas imagens carregaram
     fill(0, 64);
     textSize(12);
     text(`Carregadas ${imagesLoaded}/${totalImages} imagens`, width / 2, height / 2 + 60);
     textSize(16);
 
-    return; // ainda não desenha imagens
+    return;
   }
 
   // DESENHO DAS IMAGENS
-  if (mouseIsPressed) {
-    // só desenha se ao menos 1 imagem carregou
-    if (photos.length === 0) return;
-
-    let img = photos[index % photos.length]; // garante índice válido
+  if (mouseIsPressed && photos.length > 0) {
+    // Garantir índice válido mesmo com carregamento assíncrono
+    let img = photos[index % photos.length];
     if (!img) return;
 
     let w = 450;
