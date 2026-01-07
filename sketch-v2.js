@@ -5,7 +5,6 @@ let menuHeight = 0;
 let started = false;
 
 function preload() {
-  photos = [];
   for (let i = 1; i <= 11; i++) {
     photos.push(loadImage(`images/${i}.png`));
   }
@@ -19,13 +18,12 @@ function setup() {
   canvas.position(0, menuHeight);
   canvas.style('z-index', '-1');
 
+  background('#f2f2f2');
   frameRate(30);
   noCursor();
 
   textAlign(CENTER, CENTER);
   textSize(14);
-
-  background('#f2f2f2');
 }
 
 function windowResized() {
@@ -41,13 +39,9 @@ function mousePressed() {
 }
 
 function draw() {
-  // TEXTO INICIAL
   if (!started) {
     background('#f2f2f2');
-
-    fill(30, 128); // cinza escuro, 50% opacidade
-    noStroke();
-
+    fill(30, 128); // 50%
     text(
       "Haz clic, arrastra, juega.\nClick, drag, play.\nClique, arraste, jogue.",
       width / 2,
@@ -56,7 +50,6 @@ function draw() {
     return;
   }
 
-  // DESENHO DAS IMAGENS
   if (mouseIsPressed) {
     let img = photos[index];
     if (!img) return;
@@ -66,4 +59,3 @@ function draw() {
     image(img, mouseX - w / 2, mouseY - h / 2, w, h);
   }
 }
-
