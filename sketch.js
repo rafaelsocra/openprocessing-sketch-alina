@@ -5,8 +5,14 @@ let menuHeight = 0;
 let started = false;
 
 function preload() {
+  photos = [];
   for (let i = 1; i <= 11; i++) {
-    photos.push(loadImage('images/' + i + '.png'));
+    let img = loadImage(
+      `images/${i}.png`,
+      () => console.log(`Imagem ${i} carregada`),
+      () => console.warn(`Erro ao carregar images/${i}.png`)
+    );
+    photos.push(img);
   }
 }
 
@@ -17,16 +23,19 @@ function setup() {
   canvas = createCanvas(window.innerWidth, window.innerHeight - menuHeight);
   canvas.position(0, menuHeight);
   canvas.style('z-index', '-1');
+
   noCursor();
   frameRate(30);
   background('#f2f2f2');
 
   textAlign(CENTER, CENTER);
+  textSize(14);
 }
 
 function windowResized() {
   resizeCanvas(window.innerWidth, window.innerHeight - menuHeight);
   canvas.position(0, menuHeight);
+  background('#f2f2f2');
 }
 
 function keyPressed() {
@@ -46,15 +55,16 @@ function mousePressed() {
   }
 
   index++;
-  if (index === photos.length) index = 0;
+  if (index >= photos.length) index = 0;
 }
 
 function draw() {
-  // Texto inicial
+  // TEXTO INICIAL
   if (!started) {
     background('#f2f2f2');
-    fill(0, 25); // ~10% de opacidade
-    textSize(14);
+
+    fill(0, 128); // 50% de opacidade
+    noStroke();
 
     text(
       "Haz clic, arrastra, juega.\nClick, drag, play.\nClique, arraste, jogue.",
@@ -64,11 +74,13 @@ function draw() {
     return;
   }
 
-  // Desenho das imagens
-  if (mouseIsPressed) {
+  // DESENHO DAS IMAGENS
+  if (mouseIsPressed && photos.length > 0) {
     let img = photos[index];
-    let w = 450;
-    let h = w * (2 / 3); // proporção 3:2
-    image(img, mouseX - w / 2, mouseY - h / 2, w, h);
+    if (img) {
+      let w = 450;
+      let h = w * (2 / 3);
+      image(img, mouseX - w / 2, mouseY - h / 2, w, h);
+    }
   }
 }
