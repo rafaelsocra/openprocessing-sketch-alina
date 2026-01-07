@@ -3,24 +3,16 @@ let index = 0;
 let canvas;
 let menuHeight = 0;
 let started = false;
-let imagesLoaded = 0;
 
 function preload() {
-  // Carrega todas as 11 imagens
+  // Carrega imagens de 1 a 11
   for (let i = 1; i <= 11; i++) {
-    loadImage(
-      `images/${i}.png`,
-      (img) => {
-        photos.push(img);
-        imagesLoaded++;
-        console.log(`Imagem ${i} carregada`);
-      },
-      () => console.warn(`Erro ao carregar images/${i}.png`)
-    );
+    photos.push(loadImage(`images/${i}.png`));
   }
 }
 
 function setup() {
+  // Detecta altura do menu
   let menu = document.querySelector('header, .pixpa-header, #header'); 
   if (menu) menuHeight = menu.offsetHeight;
 
@@ -28,12 +20,13 @@ function setup() {
   canvas.position(0, menuHeight);
   canvas.style('z-index', '-1');
 
-  background('#f2f2f2');
   frameRate(30);
-  noCursor();
 
+  // Cursor visível
   textAlign(CENTER, CENTER);
-  textSize(16); // um pouco maior para visibilidade
+  textSize(16);
+
+  background('#f2f2f2');
 }
 
 function windowResized() {
@@ -43,20 +36,23 @@ function windowResized() {
 }
 
 function mousePressed() {
-  // Começa a interação
-  started = true;
+  // Primeiro clique inicia a interação e faz o texto sumir
+  if (!started) {
+    started = true;
+  }
+
+  // Avança para próxima imagem
   index++;
   if (index >= photos.length) index = 0;
 }
 
 function draw() {
-  // Antes de começar, mostra texto inicial
+  // TEXTO INICIAL
   if (!started) {
     background('#f2f2f2');
 
-    fill(0, 128); // 50% opacidade, texto mais visível
+    fill(0, 128); // 50% de opacidade
     noStroke();
-
     text(
       "Haz clic, arrastra, juega.\nClick, drag, play.\nClique, arraste, jogue.",
       width / 2,
@@ -66,13 +62,13 @@ function draw() {
     return; // não desenha imagens ainda
   }
 
-  // Desenho das imagens enquanto o mouse é pressionado
+  // DESENHO DAS IMAGENS
   if (mouseIsPressed && photos.length === 11) {
     let img = photos[index];
     if (!img) return;
 
     let w = 450;
-    let h = w * (2 / 3);
+    let h = w * (2 / 3); // proporção 3:2
     image(img, mouseX - w / 2, mouseY - h / 2, w, h);
   }
 }
